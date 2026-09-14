@@ -182,10 +182,12 @@ export type Database = {
       }
       profiles: {
         Row: {
+          age: number | null
           avatar_url: string | null
           bio: string | null
           created_at: string | null
           full_name: string | null
+          gender: Database['public']['Enums']['user_gender'] | null
           github_url: string | null
           id: string
           is_verified: boolean | null
@@ -196,10 +198,12 @@ export type Database = {
           website_url: string | null
         }
         Insert: {
+          age?: number | null
           avatar_url?: string | null
           bio?: string | null
           created_at?: string | null
           full_name?: string | null
+          gender?: Database['public']['Enums']['user_gender'] | null
           github_url?: string | null
           id: string
           is_verified?: boolean | null
@@ -210,10 +214,12 @@ export type Database = {
           website_url?: string | null
         }
         Update: {
+          age?: number | null
           avatar_url?: string | null
           bio?: string | null
           created_at?: string | null
           full_name?: string | null
+          gender?: Database['public']['Enums']['user_gender'] | null
           github_url?: string | null
           id?: string
           is_verified?: boolean | null
@@ -259,6 +265,7 @@ export type Database = {
         | 'metric_stat'
         | 'custom_markdown'
         | 'media_embed'
+      user_gender: 'male' | 'female' | 'other' | 'prefer_not_to_say'
     }
     CompositeTypes: {
       [_ in never]: never
@@ -395,6 +402,7 @@ export const Constants = {
         'custom_markdown',
         'media_embed',
       ],
+      user_gender: ['male', 'female', 'other', 'prefer_not_to_say'],
     },
   },
 } as const
