@@ -5,7 +5,18 @@
   "tabWidth": 2,
   "trailingComma": "es5",
   "printWidth": 80,
-  "plugins": ["prettier-plugin-tailwindcss"],
-  "tailwindStylesheet": "app/globals.css",
-  "tailwindFunctions": ["cn", "cva"]
+  "plugins": [
+    "prettier-plugin-tailwindcss",
+    "@trivago/prettier-plugin-sort-imports"
+  ],
+  "tailwindStylesheet": "src/app/globals.css",
+  "tailwindFunctions": ["cn", "cva"],
+  "importOrder": [
+    "^@/components/(.*)$",
+    "^@components/ui/(.*)$",
+    "^@/lib/(.*)$",
+    "^[./]"
+  ],
+  "importOrderSeparation": true,
+  "importOrderSortSpecifiers": true
 }
