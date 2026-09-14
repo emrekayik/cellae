@@ -40,16 +40,25 @@ export async function proxy(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser()
 
-  if (
-    !user &&
-    !request.nextUrl.pathname.startsWith('/login') &&
-    !request.nextUrl.pathname.startsWith('/auth')
-  ) {
-    // no user, potentially respond by redirecting the user to the login page
+  // Sadece /app ve altındaki rotaları koru: Oturum açılmamışsa /auth/login sayfasına yönlendir
+  if (!user && request.nextUrl.pathname.startsWith('/app')) {
     const url = request.nextUrl.clone()
-    url.pathname = '/login'
+    url.pathname = '/auth/login'
     return NextResponse.redirect(url)
   }
+
+  // Zaten giriş yapmış kullanıcı auth veya login sayfalarına gitmek isterse /app'e yönlendir
+  if (
+    user &&
+    (request.nextUrl.pathname.startsWith('/auth') ||
+      request.nextUrl.pathname.startsWith('/login'))
+  ) {
+    const url = request.nextUrl.clone()
+    url.pathname = '/app'
+    return NextResponse.redirect(url)
+  }
+
+
 
   // IMPORTANT: You *must* return the supabaseResponse object as it is.
   // If you're creating a new response object with NextResponse.next() make sure to:
