@@ -1,12 +1,5 @@
 import { logoutAction } from "@/app/auth/actions"
 import {
-  BellIcon,
-  CalendarIcon,
-  FileTextIcon,
-  GlobeIcon,
-  InputIcon,
-} from "@radix-ui/react-icons"
-import {
   ExternalLink,
   Eye,
   Grid,
@@ -27,68 +20,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import { BentoCard, BentoGrid } from "@/components/util/bento-grid"
+import { EditableBentoGrid } from "@/components/blocks/editable-bento-grid"
+import {
+  getOrCreateDefaultPortfolioAction,
+  type BentoCardRow,
+} from "@/app/app/actions/bento"
 
 import { createClient } from "@/lib/supabase/server"
-
-const features = [
-  {
-    Icon: FileTextIcon,
-    name: "Save your files",
-    description: "We automatically save your files as you type.",
-    href: "/",
-    cta: "Learn more",
-    background: (
-      <img alt="" className="absolute -top-20 -right-20 opacity-60" />
-    ),
-    className: "lg:row-start-1 lg:row-end-4 lg:col-start-2 lg:col-end-3",
-  },
-  {
-    Icon: InputIcon,
-    name: "Full text search",
-    description: "Search through all your files in one place.",
-    href: "/",
-    cta: "Learn more",
-    background: (
-      <img alt="" className="absolute -top-20 -right-20 opacity-60" />
-    ),
-    className: "lg:col-start-1 lg:col-end-2 lg:row-start-1 lg:row-end-3",
-  },
-  {
-    Icon: GlobeIcon,
-    name: "Multilingual",
-    description: "Supports 100+ languages and counting.",
-    href: "/",
-    cta: "Learn more",
-    background: (
-      <img alt="" className="absolute -top-20 -right-20 opacity-60" />
-    ),
-    className: "lg:col-start-1 lg:col-end-2 lg:row-start-3 lg:row-end-4",
-  },
-  {
-    Icon: CalendarIcon,
-    name: "Calendar",
-    description: "Use the calendar to filter your files by date.",
-    href: "/",
-    cta: "Learn more",
-    background: (
-      <img alt="" className="absolute -top-20 -right-20 opacity-60" />
-    ),
-    className: "lg:col-start-3 lg:col-end-3 lg:row-start-1 lg:row-end-2",
-  },
-  {
-    Icon: BellIcon,
-    name: "Notifications",
-    description:
-      "Get notified when someone shares a file or mentions you in a comment.",
-    href: "/",
-    cta: "Learn more",
-    background: (
-      <img alt="" className="absolute -top-20 -right-20 opacity-60" />
-    ),
-    className: "lg:col-start-3 lg:col-end-3 lg:row-start-2 lg:row-end-4",
-  },
-]
 
 export default async function AppDashboardPage() {
   const supabase = await createClient()
@@ -108,12 +46,24 @@ export default async function AppDashboardPage() {
     .eq("id", user.id)
     .single()
 
-  // Kullanıcının portfolyolarını getir
-  const { data: portfolios } = await supabase
+  // Kullanıcının portfolyolarını ve kartlarını getir
+  let { data: portfolios } = await supabase
     .from("portfolios")
-    .select("*, bento_cards(id)")
+    .select("*, bento_cards(*)")
     .eq("user_id", user.id)
     .order("created_at", { ascending: false })
+
+  if (!portfolios || portfolios.length === 0) {
+    const defaultPortfolio = await getOrCreateDefaultPortfolioAction()
+    if (defaultPortfolio.data) {
+      portfolios = [defaultPortfolio.data]
+    }
+  }
+
+  const activePortfolio =
+    portfolios && portfolios.length > 0 ? portfolios[0] : null
+  const bentoCards =
+    (activePortfolio?.bento_cards as BentoCardRow[]) || []
 
   const totalViews =
     portfolios?.reduce((acc, curr) => acc + (curr.view_count || 0), 0) || 0
@@ -354,11 +304,26 @@ export default async function AppDashboardPage() {
               ))}
             </div>
           )}
-          <BentoGrid className="lg:grid-rows-3">
-            {features.map((feature) => (
-              <BentoCard key={feature.name} {...feature} />
-            ))}
-          </BentoGrid>
+          {/* Canlı Düzenlenebilir Bento Grid */}
+          <div className="pt-8 space-y-4">
+            <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <h3 className="text-lg font-semibold tracking-tight">
+                  Canlı Bento Grid Editörü
+                </h3>
+                <p className="text-xs text-muted-foreground">
+                  Kartları sürükleyip bırakarak yerini değiştirebilir, boyut düğmeleriyle genişlik ve yüksekliği ayarlayabilirsiniz. Düzen veritabanına anında kaydedilir.
+                </p>
+              </div>
+            </div>
+
+            {activePortfolio && (
+              <EditableBentoGrid
+                portfolioId={activePortfolio.id}
+                initialCards={bentoCards}
+              />
+            )}
+          </div>
         </div>
       </main>
     </div>

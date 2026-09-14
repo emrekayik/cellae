@@ -265,6 +265,7 @@ export type Database = {
         | 'metric_stat'
         | 'custom_markdown'
         | 'media_embed'
+        | 'profile'
       user_gender: 'male' | 'female' | 'other' | 'prefer_not_to_say'
     }
     CompositeTypes: {
@@ -401,6 +402,7 @@ export const Constants = {
         'metric_stat',
         'custom_markdown',
         'media_embed',
+        'profile',
       ],
       user_gender: ['male', 'female', 'other', 'prefer_not_to_say'],
     },

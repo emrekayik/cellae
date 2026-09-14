@@ -28,15 +28,14 @@ import {
   Trash2,
   ExternalLink,
   Code2,
-  Github,
   TrendingUp,
   Share2,
   Sparkles,
   FileText,
-  Maximize2,
   Check,
   Loader2,
 } from "lucide-react"
+import { GitHubLogoIcon } from "@radix-ui/react-icons"
 import { toast } from "sonner"
 
 import { Button } from "@/components/ui/button"
@@ -50,27 +49,12 @@ import {
   type CardTypeEnum,
 } from "@/app/app/actions/bento"
 
+import { getSpanClasses } from "@/lib/bento"
+export { getSpanClasses }
+
 interface EditableBentoGridProps {
   portfolioId: string
   initialCards: BentoCardRow[]
-}
-
-export function getSpanClasses(colSpan = 1, rowSpan = 1) {
-  const colClass =
-    colSpan === 3
-      ? "col-span-1 md:col-span-2 lg:col-span-3"
-      : colSpan === 2
-        ? "col-span-1 md:col-span-2"
-        : "col-span-1"
-
-  const rowClass =
-    rowSpan === 3
-      ? "row-span-3 min-h-[500px]"
-      : rowSpan === 2
-        ? "row-span-2 min-h-[340px]"
-        : "row-span-1 min-h-[180px]"
-
-  return `${colClass} ${rowClass}`
 }
 
 export function EditableBentoGrid({
@@ -82,7 +66,7 @@ export function EditableBentoGrid({
   )
   const [isEditing, setIsEditing] = useState(true)
   const [activeId, setActiveId] = useState<string | null>(null)
-  const [isSaving, startSaving] = useTransition()
+  const [, startSaving] = useTransition()
   const [saveStatus, setSaveStatus] = useState<"idle" | "saving" | "saved">("idle")
 
   const sensors = useSensors(
@@ -363,7 +347,7 @@ interface BentoCardViewProps {
   card: BentoCardRow
   isEditing: boolean
   isOverlay?: boolean
-  dragHandleProps?: Record<string, any>
+  dragHandleProps?: Record<string, unknown>
   onResize?: (col: number, row: number) => void
   onDelete?: () => void
 }
@@ -405,7 +389,7 @@ function BentoCardView({
       case "tech_stack":
         return <Sparkles className="size-5 text-amber-500" />
       case "github_stats":
-        return <Github className="size-5 text-foreground" />
+        return <GitHubLogoIcon className="size-5 text-foreground" />
       case "metric_stat":
         return <TrendingUp className="size-5 text-emerald-500" />
       case "social_links":
@@ -533,7 +517,7 @@ function BentoCardView({
         {card.card_type === "github_stats" && (
           <div className="flex items-center gap-3 mt-2">
             <div className="flex size-10 items-center justify-center rounded-lg bg-foreground/5 border border-border/40">
-              <Github className="size-5 text-foreground" />
+              <GitHubLogoIcon className="size-5 text-foreground" />
             </div>
             <div>
               <div className="text-sm font-semibold text-foreground">500+ Commit</div>

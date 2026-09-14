@@ -1,6 +1,7 @@
 "use client"
 
 import { ArrowRight, Check } from "lucide-react"
+import Link from "next/link"
 import * as React from "react"
 import { toast } from "sonner"
 
@@ -122,7 +123,7 @@ export default function PricingBlock() {
               variant="secondary"
               size="lg"
               className="w-full"
-              render={<a href="/auth/sign-up" />}
+              render={<Link href="/auth/sign-up" />}
             >
               Start Free Trial
               <ArrowRight data-icon="inline-end" aria-hidden="true" />
@@ -164,7 +165,7 @@ export default function PricingBlock() {
               variant="outline"
               size="lg"
               className="w-full"
-              render={<a href="/auth/sign-up" />}
+              render={<Link href="/auth/sign-up" />}
             >
               Get Started Free
             </Button>
