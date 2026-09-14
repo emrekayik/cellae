@@ -12,6 +12,8 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet"
 
+import { AnimatedThemeToggler } from "../util/animated-theme-toggler"
+
 const navLinks = [
   { name: "Pricing", link: "/pricing" },
   { name: "About", link: "/about" },
@@ -23,7 +25,7 @@ export default function Header() {
       <div className="mx-auto flex h-16 w-full max-w-5xl items-center gap-6 px-6">
         <Link
           href="/"
-          className="text-md flex items-center gap-2 font-syncopate font-bold tracking-tight"
+          className="text-md flex items-end gap-2 font-syncopate font-bold tracking-tight"
         >
           cellae
         </Link>
@@ -38,7 +40,8 @@ export default function Header() {
             </Link>
           ))}
         </nav>
-        <div className="ml-auto flex items-center gap-2">
+        <div className="ml-auto flex items-center gap-8">
+          <AnimatedThemeToggler />
           <Button
             render={<Link href="/app">Go to App</Link>}
             nativeButton={false}

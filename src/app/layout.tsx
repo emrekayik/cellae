@@ -3,7 +3,9 @@ import { Geist, Geist_Mono, Inter, Syncopate } from "next/font/google"
 
 import Footer from "@/components/global/footer"
 import Header from "@/components/global/header"
-import { ThemeProvider } from "@/components/theme-provider"
+import { LenisProvider } from "@/components/provider/lenis-provider"
+import { ThemeProvider } from "@/components/provider/theme-provider"
+import { Toaster } from "@/components/ui/sonner"
 
 import { cn } from "@/lib/utils"
 
@@ -51,9 +53,8 @@ export default function RootLayout({
     >
       <body>
         <ThemeProvider>
-          <Header />
+          <Toaster />
           {children}
-          <Footer />
         </ThemeProvider>
       </body>
     </html>
